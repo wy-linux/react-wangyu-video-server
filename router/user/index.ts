@@ -73,10 +73,17 @@ router.post('/user/register', async(req, res) => {
             message: '当前用户名已经存在'
         })
     }
+    const isCodeValid = req.body.code === identify[req.body.email]
+    if(!isCodeValid) {
+        return res.status(422).send({
+            message: '验证码错误，请重新获取'
+        })            
+    }
     await User.create({
         email: req.body.email,
         password: req.body.password
     })
+    
     res.send({
         message: '注册成功'
     })
